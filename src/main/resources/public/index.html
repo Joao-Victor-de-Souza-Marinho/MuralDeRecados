@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mural de recados</title>
+    <link rel="shortcut icon" href="1836126.png" type="image/x-icon">
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #f4f4f4;
+            color: #222;
+            margin: 0;
+            font-family: arial, sans-serif;
+        }
+
+        header {
+            background: #e30613;
+            color: #fff;
+            text-align: center;
+            padding: 24px;
+        }
+
+        main {
+            width: min(700px, 92%);
+            margin: 28px auto;
+        }
+
+        form,
+        article {
+            background: #fff;
+            padding: 18px;
+            margin-bottom: 14px;
+            border-radius: 8px;
+        }
+
+        input,
+        textarea,
+        button {
+            width: 100%;
+            padding: 11px;
+            margin: 8px 0 14px;
+            font: inherit;
+        }
+
+        textarea {
+            min-height: 90px;
+            resize: vertical;
+        }
+
+        button {
+            background: #e30613;
+            color: #fff;
+            border: 0;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #b9040e;
+        }
+
+        h2 {
+            margin-top: 28px;
+        }
+
+        article {
+            border-left: 5px solid #e30613;
+        }
+
+        article p {
+            margin-bottom: 0;
+        }
+
+        #aviso {
+            min-height: 22px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>Mural de Recados</h1>
+        <p>Front+ Java + JDBC + MySQL</p>
+    </header>
+    <main>
+        <form id="form-recado">
+            <label for="autor">Nome</label>
+            <input id="autor" name="autor" maxlength="80" required>
+            <label for="mensagem">Recado</label>
+            <textarea name="mensagem" id="mensagem" maxlength="255" required>
+
+        </textarea>
+            <button type="submit">Publicar recado</button>
+        </form>
+        <p id="aviso"></p>
+        <h2>Recados publicados</h2>
+        <section id="lista-recados"></section>
+    </main>
+    <script>
+        const formulario = document.querySelector("#form-recado")
+        const lista = document.querySelector("#lista-recados")
+        const aviso = document.querySelector("#aviso")
+
+        async function carregarRecados() {
+            const resposta = await fetch("/api/recados")
+            const recados = await resposta.json()
+            lista.innerHTML = ""
+
+            for (const recado of recados) {
+                const cartao = document.createElement("article")
+                const autor = document.createElement("strong")
+                const mensagem = document.createElement("p")
+
+                autor.textContent = recado.autor
+                mensagem.textContent = recado.mensagem
+                cartao.append(autor, mensagem)
+                lista.appendChild(cartao)
+            }
+
+        }
+
+        formulario.addEventListener("submit", async function (evento) {
+            evento.preventDefault()
+            aviso.textContent = "Salvando..."
+
+            const dados = new URLSearchParams(new FormData(formulario))
+            const resposta = await fetch("/api/recados", {
+                method: "POST",
+                body: dados
+            })
+            if(resposta.ok){
+                formulario.reset()
+                aviso.textContent = "Recado cadastrado com sucesso!!!"
+                await carregarRecados()
+            }else{
+                aviso.textContent = "Não foi possivel cadastrar o recado!!!"
+            }
+        })
+        carregarRecados()
+    </script>
+
+</body>
+
+</html>

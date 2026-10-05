@@ -37,9 +37,9 @@ public class Main {
 
     private static void atenderRecados(HttpExchange troca) throws IOException{
         //permite que o app Android e outros clientes acessem a API
-        troca.getRequestHeaders().set("Acess-Control-Allow_Origin", "*");
-        troca.getRequestHeaders().set("Acess-Control-Allow-Methods", "GET,POST,OPTIONS");
-        troca.getRequestHeaders().set("Acess-Control-Allow-Headers", "Content-Type");
+        troca.getResponseHeaders().set("Acess-Control-Allow_Origin", "*");
+        troca.getResponseHeaders().set("Acess-Control-Allow-Methods", "GET,POST,OPTIONS");
+        troca.getResponseHeaders().set("Acess-Control-Allow-Headers", "Content-Type");
 
         try {
             if (troca.getRequestMethod().equals("OPTIONS")){

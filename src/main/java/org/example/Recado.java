@@ -24,7 +24,7 @@ public class Recado {
     }
 
     public String paraJson(){
-        return " {\"id\":" +id + ".\"autor\":\"" + escapar(autor)
+        return " {\"id\":" +id + ",\"autor\":\"" + escapar(autor)
                 + "\",\"mensagem\":\"" + escapar(mensagem) + "\"}";
     }
 
